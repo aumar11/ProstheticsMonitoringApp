@@ -481,10 +481,10 @@ public class BluetoothLinkService
           String line; 
           while ((line = r.readLine()) != null)
           {
-            if (D) Log.i(TAG, "Received " + line);
             List<String> data = Arrays.asList(line.split(","));
             if (data.size() == 5)
             {
+              if (D) Log.i(TAG, "Received " + line);
               String timestamp = data.get(0);
               float xaxis = Float.parseFloat(data.get(1));
               float yaxis = Float.parseFloat(data.get(2));
