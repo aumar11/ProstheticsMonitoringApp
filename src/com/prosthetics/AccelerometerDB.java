@@ -14,8 +14,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.SQLException;
 import android.os.Environment;
 
-import com.octothorper.bluetooth.AccelerometerDBHelper;
-import com.octothorper.bluetooth.AccelerometerWrapper;
+import com.prosthetics.AccelerometerDBHelper;
+import com.prosthetics.AccelerometerWrapper;
 
 import org.json.JSONObject;
 import org.json.JSONArray;

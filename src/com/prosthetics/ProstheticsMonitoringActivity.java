@@ -33,10 +33,10 @@ import android.view.MenuItem;
  * @version 1.0
  */
 
-public class ProstheticsMonitoringApp extends Activity
+public class ProstheticsMonitoringActivity extends Activity
 {
   /** Tag for Log statements in this class. */
-  public static final String TAG = "ProstheticsMonitoringApp";
+  public static final String TAG = "ProstheticsMonitoringActivity";
   private static final boolean D = true;
 
   // Message types sent from the BluetoothLinkService Handler

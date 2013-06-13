@@ -80,7 +80,7 @@ public class BluetoothLinkService
     mState = state;
 
     // Give the new state to the Handler so the UI Activity can update
-    mHandler.obtainMessage(BluetoothLink.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+    mHandler.obtainMessage(ProstheticsMonitoringActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
   }
 
   /** Return the current connection state. */
@@ -172,9 +172,9 @@ public class BluetoothLinkService
     mConnectedThread.start();
 
     // Send the name of the connected device back to the UI Activity
-    Message msg = mHandler.obtainMessage(BluetoothLink.MESSAGE_DEVICE_NAME);
+    Message msg = mHandler.obtainMessage(ProstheticsMonitoringActivity.MESSAGE_DEVICE_NAME);
     Bundle bundle = new Bundle();
-    bundle.putString(BluetoothLink.DEVICE_NAME, device.getName());
+    bundle.putString(ProstheticsMonitoringActivity.DEVICE_NAME, device.getName());
     msg.setData(bundle);
     mHandler.sendMessage(msg);
 
@@ -232,9 +232,9 @@ public class BluetoothLinkService
   private void connectionFailed()
   {
     // Send a failure message back to the Activity
-    Message msg = mHandler.obtainMessage(BluetoothLink.MESSAGE_TOAST);
+    Message msg = mHandler.obtainMessage(ProstheticsMonitoringActivity.MESSAGE_TOAST);
     Bundle bundle = new Bundle();
-    bundle.putString(BluetoothLink.TOAST, "Unable to connect device");
+    bundle.putString(ProstheticsMonitoringActivity.TOAST, "Unable to connect device");
     msg.setData(bundle);
     mHandler.sendMessage(msg);
 
@@ -248,9 +248,9 @@ public class BluetoothLinkService
   private void connectionLost()
   {
     // Send a failure message back to the Activity
-    Message msg = mHandler.obtainMessage(BluetoothLink.MESSAGE_TOAST);
+    Message msg = mHandler.obtainMessage(ProstheticsMonitoringActivity.MESSAGE_TOAST);
     Bundle bundle = new Bundle();
-    bundle.putString(BluetoothLink.TOAST, "Connection lost");
+    bundle.putString(ProstheticsMonitoringActivity.TOAST, "Connection lost");
     msg.setData(bundle);
     mHandler.sendMessage(msg);
 
@@ -494,7 +494,7 @@ public class BluetoothLinkService
           }
 
           // Send the obtained bytes to the UI Activity
-          mHandler.obtainMessage(BluetoothLink.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+          mHandler.obtainMessage(ProstheticsMonitoringActivity.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
         }
         catch (IOException e)
         {
@@ -518,7 +518,7 @@ public class BluetoothLinkService
         mmOutStream.write(buffer);
 
         // Share the sent message back to the UI Activity
-        mHandler.obtainMessage(BluetoothLink.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
+        mHandler.obtainMessage(ProstheticsMonitoringActivity.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
       }
       catch (IOException e)
       {
