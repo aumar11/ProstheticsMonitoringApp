@@ -6,19 +6,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * This class is a helper class for opening and creating the accelerometer db.
- * It should be used in conjunction with {@link AcelerometerDB} helper class.
- * @author jbanford, based on prior work by 
+ * This class is a helper class for opening and creating the patient db.
+ * It should be used in conjunction with {@link PatientDB} helper class.
+ * @author aumar and jbanford, based on prior work by 
  * @author Jakub Konka
  * @version 1.0
  * @see LocationsDB
  */
-public class AccelerometerDBHelper extends SQLiteOpenHelper
+public class PatientDBHelper extends SQLiteOpenHelper
 {
   /** Tag for Log statements in this class. */
-  public final static String TAG = "AccelerometerDBHelper";
-  /** Name of the only table in the db for storing locations of all types. */
-  public final static String TABLE = "accelerometer";
+  public final static String TAG = "PatientDBHelper";
+  /** Name of the table in the db for storing accelerometer data. */
+  public final static String ACC_TABLE = "accelerometer";
   /** Id column name. */
   public final static String ID = "id";
   /** Timestamp column name */
@@ -28,18 +28,21 @@ public class AccelerometerDBHelper extends SQLiteOpenHelper
   /** Y axis column name */
   public final static String Y_AXIS = "y";
   /** Z axis column name */
-  public final static String Z_AXIS = "z";
-
+  public final static String Z_AXIS = "z"; 
+  /** Name of the table used to store temperature data */
+  public final static String TEM_TABLE = "temperature";
+  /** Temperature column name */
+  public final static String VALUE = "value"; 
   /**
-   * Constructs an object of type {@code AccelerometerDBHelper}.
-   * @param context The {@code Context} in which the {@code AccelerometerDBHelper}
+   * Constructs an object of type {@code PatientDBHelper}.
+   * @param context The {@code Context} in which the {@code PatientDBHelper}
    * object was created.
    * @param path The absolute path to the interactions db.
    */
-  public AccelerometerDBHelper(Context context, String path)
+  public PatientDBHelper(Context context, String path)
   {
     super(context, path, null, 1);
-    Log.i(TAG, "Create a AccelerometerDBHelper.");
+    Log.i(TAG, "Create a PatientDBHelper.");
   }
 
   /**
@@ -51,15 +54,23 @@ public class AccelerometerDBHelper extends SQLiteOpenHelper
   public void onCreate(SQLiteDatabase db)
   {
     Log.i(TAG, "onCreate called.");
-    String interSQL = "create table " 
-                    + TABLE 
-                    + " (" 
-                    + ID + " integer primary key autoincrement, " 
-                    + TIMESTAMP + " text, "
-                    + X_AXIS + " real, "
-                    + Y_AXIS + " real, "
-                    + Z_AXIS + " real);";
-    db.execSQL(interSQL);
+    String createAccSQL = "create table " 
+                        + ACC_TABLE 
+                        + " (" 
+                        + ID + " integer primary key autoincrement, " 
+                        + TIMESTAMP + " text, "
+                        + X_AXIS + " real, "
+                        + Y_AXIS + " real, "
+                        + Z_AXIS + " real);";
+    db.execSQL(createAccSQL);
+
+   String createTemSQL = "create table " 
+                       + TEM_TABLE 
+                       + " (" 
+                       + ID + " integer primary key autoincrement, " 
+                       + TIMESTAMP + " text, "
+                       + VALUE + " real);";
+    db.execSQL(createTemSQL);
   }
 
   /**

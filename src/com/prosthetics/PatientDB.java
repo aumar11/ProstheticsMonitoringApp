@@ -14,8 +14,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.SQLException;
 import android.os.Environment;
 
-import com.prosthetics.AccelerometerDBHelper;
+import com.prosthetics.PatientDBHelper;
 import com.prosthetics.AccelerometerWrapper;
+import com.prosthetics.TemperatureWrapper;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -27,12 +28,12 @@ import org.json.JSONArray;
  * @author aumar11 and jbanford, based on prior work by
  * @author Jakub Konka
  * @version 1.0
- * @see AccelerometerDBHelper
+ * @see PatientDBHelper
  */
-public class AccelerometerDB
+public class PatientDB
 {
   /** Tag for Log statements in this class. */
-  public final static String TAG = "AccelerometerDB";
+  public final static String TAG = "PatientDB";
   private static final boolean D = true;
   /**
    * Base directory holding the public contents of the app on the 
@@ -41,24 +42,24 @@ public class AccelerometerDB
    */
   private final static String BASE_DIR = "ProstheticsMonitoringAppProject";
   /** The name of the db. */
-  private final static String DB_NAME = "data.sqlite3";
-  private AccelerometerDBHelper dbHelper;
+  private final static String DB_NAME = "patient.sqlite3";
+  private PatientDBHelper dbHelper;
 
   /**
-   * Constructs an object of type {@code AccelerometerDB}.
-   * @param context The {@code Context} in which the {@code AccelerometerDB} object
+   * Constructs an object of type {@code PatientDB}.
+   * @param context The {@code Context} in which the {@code PatientDB} object
    * was created.
    */
-  public AccelerometerDB(Context context) 
+  public PatientDB(Context context) 
   {
     Log.i(TAG, "Creating a handler for accelerometer db.");
-    String dbPath = AccelerometerDB.getDBPath() + "/" + DB_NAME;
-    dbHelper = new AccelerometerDBHelper(context, dbPath);
+    String dbPath = PatientDB.getDBPath() + "/" + DB_NAME;
+    dbHelper = new PatientDBHelper(context, dbPath);
   }
   
   /**
-   * Adds a sample to the accelerometer db.
-   * @param location {@code LocationWrapper} object to be added
+   * Adds an accelerometer sample to the patient db.
+   * @param acceleromter {@code AccelerometerWrapper} object to be added
    */
   public void addAccelerometerSample(AccelerometerWrapper accelerometer)
   {
@@ -69,16 +70,46 @@ public class AccelerometerDB
     {
       db = dbHelper.getWritableDatabase();
       ContentValues values = new ContentValues();
-      values.put(AccelerometerDBHelper.TIMESTAMP, accelerometer.getTimestamp());
-      values.put(AccelerometerDBHelper.X_AXIS, accelerometer.getX());
-      values.put(AccelerometerDBHelper.Y_AXIS, accelerometer.getY());
-      values.put(AccelerometerDBHelper.Z_AXIS, accelerometer.getZ());
-      db.insertOrThrow(AccelerometerDBHelper.TABLE, AccelerometerDBHelper.TIMESTAMP, values);
+      values.put(PatientDBHelper.TIMESTAMP, accelerometer.getTimestamp());
+      values.put(PatientDBHelper.X_AXIS, accelerometer.getX());
+      values.put(PatientDBHelper.Y_AXIS, accelerometer.getY());
+      values.put(PatientDBHelper.Z_AXIS, accelerometer.getZ());
+      db.insertOrThrow(PatientDBHelper.ACC_TABLE, PatientDBHelper.TIMESTAMP, values);
       Log.i(TAG, "Value has been inserted");
     } 
     catch (SQLException e)
     {
       Log.i(TAG, "Could not insert data into accelerometer table: " + e);
+    } 
+    finally
+    {
+      Log.i(TAG, "Closing db...");
+      if (db != null)
+        db.close();
+    }
+  }
+
+  /**
+   * Adds a temperature to the patient db.
+   * @param temperature {@code TemperatureWrapper} object to be added
+   */
+  public void addTemperatureSample(TemperatureWrapper temperature)
+  {
+    // Add interaction to the db
+    Log.i(TAG, "Adding record to temperature table");
+    SQLiteDatabase db = null;
+    try
+    {
+      db = dbHelper.getWritableDatabase();
+      ContentValues values = new ContentValues();
+      values.put(PatientDBHelper.TIMESTAMP, temperature.getTimestamp());
+      values.put(PatientDBHelper.VALUE, temperature.getValue());
+      db.insertOrThrow(PatientDBHelper.TEM_TABLE, PatientDBHelper.TIMESTAMP, values);
+      Log.i(TAG, "Value has been inserted");
+    } 
+    catch (SQLException e)
+    {
+      Log.i(TAG, "Could not insert data into temperature table: " + e);
     } 
     finally
     {

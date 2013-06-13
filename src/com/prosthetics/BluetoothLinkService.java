@@ -487,10 +487,13 @@ public class BluetoothLinkService
             float xaxis = Float.parseFloat(data.get(1));
             float yaxis = Float.parseFloat(data.get(2));
             float zaxis = Float.parseFloat(data.get(3));
+            float temperature = Float.parseFloat((data.get(4))/10); // add decimal point to temperature reading
              
             AccelerometerWrapper acc = new AccelerometerWrapper(timestamp, xaxis, yaxis, zaxis);
-            AccelerometerDB accDB = new AccelerometerDB(mContext);
-            accDB.addAccelerometerSample(acc);
+            TemperatureWrapper tem = new TemperatureWrapper(timestamp, temperature);
+            PatientDB patDB = new PatientDB(mContext);
+            patDB.addAccelerometerSample(acc);
+            patDB.addTemperatureSample(tem);
           }
 
           // Send the obtained bytes to the UI Activity
