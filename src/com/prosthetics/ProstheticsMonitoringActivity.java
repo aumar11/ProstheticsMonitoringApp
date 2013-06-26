@@ -92,7 +92,7 @@ public class ProstheticsMonitoringActivity extends Activity
     }
   }
 
-    @Override
+  @Override
   public void onStart()
   {
     super.onStart();
@@ -124,32 +124,6 @@ public class ProstheticsMonitoringActivity extends Activity
     mOutStringBuffer = new StringBuffer("");
   }
 
-  /**
-   * Sends a timestamp.
-   * @param timestamp the current time.
-   */
-  private void sendTimestamp()
-  {
-    // Check that we're actually connected before trying anything
-    if (mLinkService.getState() != BluetoothLinkService.STATE_CONNECTED)
-    {
-      Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
-      return;
-    }
-
-    Long time = System.currentTimeMillis();
-    String timestamp = time.toString() + "\n";
-
-    // Get the message bytes and tell the BluetoothChatService to write
-    byte[] send = timestamp.getBytes();
-    mLinkService.write(send);
-
-    Log.d(TAG, "Sent time " + timestamp);
-
-    // Reset out string buffer to zero and clear the edit text field
-    mOutStringBuffer.setLength(0);
-  }
-
   @Override
   public synchronized void onPause()
   {
@@ -168,7 +142,7 @@ public class ProstheticsMonitoringActivity extends Activity
   public void onDestroy()
   {
     super.onDestroy();
-    // Stop the Bluetooth chat services
+    // Stop the BluetoothLinkService
     if (mLinkService != null) mLinkService.stop();
     if(D) Log.e(TAG, "--- ON DESTROY ---");
   }
