@@ -42,6 +42,8 @@ public class BluetoothLinkService
   // RFCOMM/SPP UUID
   private static final UUID MY_UUID_SECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
+  public static final String BIG_MAC = "00:12:06:12:82:84";
+
   // Member fields
   private final BluetoothAdapter mAdapter;
   private final Handler mHandler;
@@ -239,7 +241,8 @@ public class BluetoothLinkService
     mHandler.sendMessage(msg);
 
     // Start the service over to restart listening mode
-    BluetoothLinkService.this.start();
+    // BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(BIG_MAC);
+    // BluetoothLinkService.this.connect(device);
   }
 
   /**
@@ -255,7 +258,9 @@ public class BluetoothLinkService
     mHandler.sendMessage(msg);
 
     // Start the service over to restart listening mode
-    BluetoothLinkService.this.start();
+    // Start the service over to restart listening mode
+    // BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(BIG_MAC);
+    // BluetoothLinkService.this.connect(device);
   }
 
   /**
@@ -479,10 +484,11 @@ public class BluetoothLinkService
         {
           BufferedReader r = new BufferedReader(new InputStreamReader(mmInStream));
           String line; 
+
           while ((line = r.readLine()) != null)
           {
             List<String> data = Arrays.asList(line.split(","));
-            if (data.size() == 5)
+            if (data.size() == 6)
             {
               if (D) Log.i(TAG, "Received " + line);
               String timestamp = data.get(0);
@@ -499,16 +505,13 @@ public class BluetoothLinkService
               patDB.addTemperatureSample(tem);
             }
           }
-
           // Send the obtained bytes to the UI Activity
           mHandler.obtainMessage(ProstheticsMonitoringActivity.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
         }
         catch (IOException e)
         {
-          Log.e(TAG, "disconnected", e);
+          Log.i(TAG, "disconnected", e);
           connectionLost();
-          // Start the service over to restart listening mode
-          BluetoothLinkService.this.start();
           break;
         }
       }

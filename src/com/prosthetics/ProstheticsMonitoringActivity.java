@@ -49,6 +49,10 @@ public class ProstheticsMonitoringActivity extends Activity
   // Key names received from the BluetoothChatService Handler
   public static final String DEVICE_NAME = "device_name";
   public static final String TOAST = "toast";
+  public static final String BIG_MAC = "00:12:06:12:82:84";
+
+  public static final String CONN_LOST = "Connection lost";
+  public static final String CONN_FAIL = "Unable to connect device";
 
   // Intent request codes
   private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
@@ -115,7 +119,7 @@ public class ProstheticsMonitoringActivity extends Activity
 
     // Initialize the BluetoothLinkService to perform bluetooth connections
     mLinkService = new BluetoothLinkService(this, mHandler);
-
+    connectDevice();
     // Initialize the buffer for outgoing messages
     mOutStringBuffer = new StringBuffer("");
   }
@@ -211,7 +215,13 @@ public class ProstheticsMonitoringActivity extends Activity
           Toast.makeText(getApplicationContext(), "Connected to " + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
           break;
         case MESSAGE_TOAST:
-          Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST), Toast.LENGTH_SHORT).show();
+          String t = msg.getData().getString(TOAST);
+          Toast.makeText(getApplicationContext(), t, Toast.LENGTH_SHORT).show();
+          if(t.equals(CONN_LOST)|| t.equals(CONN_FAIL))
+          {
+            if (mLinkService != null)
+            connectDevice();
+          }
           break;
       }
     }
@@ -226,7 +236,7 @@ public class ProstheticsMonitoringActivity extends Activity
         // When DeviceListActivity returns with a device to connect
         if (resultCode == Activity.RESULT_OK)
         {
-          connectDevice(data);
+          connectDevice();
         }
         break;
       case REQUEST_ENABLE_BT:
@@ -246,12 +256,10 @@ public class ProstheticsMonitoringActivity extends Activity
     }
   }
 
-  private void connectDevice(Intent data)
+  private void connectDevice()
   {
-    // Get the device MAC address
-    String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
     // Get the BluetoothDevice object
-    BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+    BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(BIG_MAC);
     // Attempt to connect to the device
     mLinkService.connect(device);
   }
@@ -268,21 +276,21 @@ public class ProstheticsMonitoringActivity extends Activity
     actionBar.setSubtitle(subTitle);
   }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu)
-  {
-    MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.option_menu, menu);
-    return true;
-  }
+  // @Override
+  // public boolean onCreateOptionsMenu(Menu menu)
+  // {
+  //   MenuInflater inflater = getMenuInflater();
+  //   inflater.inflate(R.menu.option_menu, menu);
+  //   return true;
+  // }
 
-  // Pretty hacky for now: only one item in the options menu
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item)
-  {
-    Intent serverIntent = null;
-    serverIntent = new Intent(this, DeviceListActivity.class);
-    startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
-    return true;
-  }
+  // // Pretty hacky for now: only one item in the options menu
+  // @Override
+  // public boolean onOptionsItemSelected(MenuItem item)
+  // {
+  //   Intent serverIntent = null;
+  //   serverIntent = new Intent(this, DeviceListActivity.class);
+  //   startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
+  //   return true;
+  // }
 }

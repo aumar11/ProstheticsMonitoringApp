@@ -3,12 +3,16 @@
       package="com.prosthetics"
       android:versionCode="1"
       android:versionName="1.0">
+      <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17"/>
       <uses-permission android:name="android.permission.BLUETOOTH" />
       <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+      <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
         <activity android:name="ProstheticsMonitoringActivity"
-                  android:label="@string/app_name"
-                  android:theme="@android:style/Theme.WithActionBar">
+                  android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -18,5 +22,10 @@
               android:label="@string/select_device"
               android:theme="@android:style/Theme.Holo.Dialog"
               android:configChanges="orientation|keyboardHidden" />
+               <receiver android:name=".Autostart"  android:enabled="true"  android:exported="false"  android:label="Autostart">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>
