@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.Arrays;
 import java.util.List;
 import java.lang.Float;
+import java.lang.Integer;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -380,14 +381,14 @@ public class BluetoothLinkService
             {
               if (D) Log.i(TAG, "Received " + line);
               String timestamp = data.get(0);
-              float xaxis = Float.parseFloat(data.get(1));
-              float yaxis = Float.parseFloat(data.get(2));
-              float zaxis = Float.parseFloat(data.get(3));
-              float temperature = Float.parseFloat(data.get(4)); 
-              temperature /= 10; // add decimal point to temperature reading
+              int xaxis = Integer.parseInt(data.get(1));
+              int yaxis = Integer.parseInt(data.get(2));
+              int zaxis = Integer.parseInt(data.get(3));
+              int temperature1 = Integer.parseInt(data.get(4)); 
+              int temperature2 = Integer.parseInt(data.get(5)); 
                
               AccelerometerWrapper acc = new AccelerometerWrapper(timestamp, xaxis, yaxis, zaxis);
-              TemperatureWrapper tem = new TemperatureWrapper(timestamp, temperature);
+              TemperatureWrapper tem = new TemperatureWrapper(timestamp, temperature1, temperature2);
               PatientDB patDB = new PatientDB(mContext);
               patDB.addAccelerometerSample(acc);
               patDB.addTemperatureSample(tem);

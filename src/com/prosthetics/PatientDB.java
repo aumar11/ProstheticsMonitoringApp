@@ -103,7 +103,8 @@ public class PatientDB
       db = dbHelper.getWritableDatabase();
       ContentValues values = new ContentValues();
       values.put(PatientDBHelper.TIMESTAMP, temperature.getTimestamp());
-      values.put(PatientDBHelper.VALUE, temperature.getValue());
+      values.put(PatientDBHelper.VALUE1, temperature.getValue1());
+      values.put(PatientDBHelper.VALUE2, temperature.getValue2());
       db.insertOrThrow(PatientDBHelper.TEM_TABLE, PatientDBHelper.TIMESTAMP, values);
       //Log.i(TAG, "Temperature has been inserted");
     } 

@@ -31,8 +31,10 @@ public class PatientDBHelper extends SQLiteOpenHelper
   public final static String Z_AXIS = "z"; 
   /** Name of the table used to store temperature data */
   public final static String TEM_TABLE = "temperature";
-  /** Temperature column name */
-  public final static String VALUE = "value"; 
+  /** Temperature1 column name */
+  public final static String VALUE1 = "value1";
+  /** Temperature2 column name */
+  public final static String VALUE2 = "value2";  
 
   /** Name of the only table in the db for storing locations of all types. */
   public final static String TABLE = "locations";
@@ -72,9 +74,9 @@ public class PatientDBHelper extends SQLiteOpenHelper
                         + " (" 
                         + ID + " integer primary key autoincrement, " 
                         + TIMESTAMP + " text, "
-                        + X_AXIS + " real, "
-                        + Y_AXIS + " real, "
-                        + Z_AXIS + " real);";
+                        + X_AXIS + " integer, "
+                        + Y_AXIS + " integer, "
+                        + Z_AXIS + " integer);";
     db.execSQL(createAccSQL);
 
    String createTemSQL = "create table " 
@@ -82,7 +84,8 @@ public class PatientDBHelper extends SQLiteOpenHelper
                        + " (" 
                        + ID + " integer primary key autoincrement, " 
                        + TIMESTAMP + " text, "
-                       + VALUE + " real);";
+                       + VALUE1 + " integer, "
+                       + VALUE2 + " integer);";
     db.execSQL(createTemSQL);
 
     String interSQL = "create table " 

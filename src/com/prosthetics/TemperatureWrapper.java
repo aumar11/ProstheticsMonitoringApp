@@ -14,7 +14,8 @@ public class TemperatureWrapper
   public final static String TAG = "TemperatureWrapper";
 
   private String timestamp;
-  private float temperature;
+  private float temperature1;
+  private float temperature2;
 
   /**
    * Constructs an object of type {@code TemperatureWrapper}.
@@ -22,11 +23,12 @@ public class TemperatureWrapper
    * data to the patient db.
    * @param temperature The temperature value from the sensor
    */
-  public TemperatureWrapper( String timestamp, float temperature)
+  public TemperatureWrapper( String timestamp, float temperature1, float temperature2)
   {
     Log.i(TAG, "Create a LocationWrapper.");
     this.timestamp = timestamp;
-    this.temperature = temperature;
+    this.temperature1 = temperature1;
+    this.temperature2 = temperature2;
   }
   
   /**
@@ -38,11 +40,19 @@ public class TemperatureWrapper
   }
 
   /**
-   * @return The value of tempererature that was recorded.
+   * @return The value of tempererature1 that was recorded.
    */
-  public float getValue()
+  public float getValue1()
   {
-    return temperature;
+    return temperature1;
+  }
+
+  /**
+   * @return The value of tempererature2 that was recorded.
+   */
+  public float getValue2()
+  {
+    return temperature2;
   }
 
 }
