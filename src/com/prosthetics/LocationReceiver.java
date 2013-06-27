@@ -10,7 +10,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-import com.prosthetics.LocationsDB;
+import com.prosthetics.PatientDB;
 import com.prosthetics.LocationWrapper;
 
 /**
@@ -48,7 +48,7 @@ public class LocationReceiver implements LocationListener
     String provider = (extras == null || extras.getString(EXTRAS_KEY) == null)
                     ? location.getProvider() : extras.getString(EXTRAS_KEY);
     Log.i(TAG, "Location provider at " + timestamp + " : " + provider + " Location: " + location.getLatitude() + ", " + location.getLongitude());
-    LocationsDB db = new LocationsDB(mContext);
+    PatientDB db = new PatientDB(mContext);
     db.addLocation(new LocationWrapper(
                                         timestamp, 
                                         provider, 

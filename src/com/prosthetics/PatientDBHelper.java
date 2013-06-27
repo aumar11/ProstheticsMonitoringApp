@@ -33,6 +33,19 @@ public class PatientDBHelper extends SQLiteOpenHelper
   public final static String TEM_TABLE = "temperature";
   /** Temperature column name */
   public final static String VALUE = "value"; 
+
+  /** Name of the only table in the db for storing locations of all types. */
+  public final static String TABLE = "locations";
+  /** Provider column name */
+  public final static String PROVIDER = "provider";
+  /** Latitude column name */
+  public final static String LATITUDE = "latitude";
+  /** Longitude column name */
+  public final static String LONGITUDE = "longitude";
+  /** Accuracy column name */
+  public final static String ACCURACY = "accuracy";
+
+
   /**
    * Constructs an object of type {@code PatientDBHelper}.
    * @param context The {@code Context} in which the {@code PatientDBHelper}
@@ -71,6 +84,18 @@ public class PatientDBHelper extends SQLiteOpenHelper
                        + TIMESTAMP + " text, "
                        + VALUE + " real);";
     db.execSQL(createTemSQL);
+
+    String interSQL = "create table " 
+                    + TABLE 
+                    + " (" 
+                    + ID + " integer primary key autoincrement, " 
+                    + TIMESTAMP + " datetime, "
+                    + PROVIDER + " text, "
+                    + LATITUDE + " real, "
+                    + LONGITUDE + " real, "
+                    + ACCURACY + " real);";
+    db.execSQL(interSQL);
+    
   }
 
   /**

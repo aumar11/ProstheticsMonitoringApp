@@ -52,7 +52,7 @@ public class PatientDB
    */
   public PatientDB(Context context) 
   {
-    Log.i(TAG, "Creating a handler for accelerometer db.");
+    //Log.i(TAG, "Creating a handler for accelerometer db.");
     String dbPath = PatientDB.getDBPath() + "/" + DB_NAME;
     dbHelper = new PatientDBHelper(context, dbPath);
   }
@@ -64,7 +64,7 @@ public class PatientDB
   public void addAccelerometerSample(AccelerometerWrapper accelerometer)
   {
     // Add interaction to the db
-    Log.i(TAG, "Adding record to accelerometer table");
+   // Log.i(TAG, "Adding record to accelerometer table");
     SQLiteDatabase db = null;
     try
     {
@@ -75,7 +75,7 @@ public class PatientDB
       values.put(PatientDBHelper.Y_AXIS, accelerometer.getY());
       values.put(PatientDBHelper.Z_AXIS, accelerometer.getZ());
       db.insertOrThrow(PatientDBHelper.ACC_TABLE, PatientDBHelper.TIMESTAMP, values);
-      Log.i(TAG, "Value has been inserted");
+      //Log.i(TAG, "Accelerometer data has been inserted");
     } 
     catch (SQLException e)
     {
@@ -83,7 +83,7 @@ public class PatientDB
     } 
     finally
     {
-      Log.i(TAG, "Closing db...");
+    //  Log.i(TAG, "Closing db...");
       if (db != null)
         db.close();
     }
@@ -96,7 +96,7 @@ public class PatientDB
   public void addTemperatureSample(TemperatureWrapper temperature)
   {
     // Add interaction to the db
-    Log.i(TAG, "Adding record to temperature table");
+   // Log.i(TAG, "Adding record to temperature table");
     SQLiteDatabase db = null;
     try
     {
@@ -105,7 +105,7 @@ public class PatientDB
       values.put(PatientDBHelper.TIMESTAMP, temperature.getTimestamp());
       values.put(PatientDBHelper.VALUE, temperature.getValue());
       db.insertOrThrow(PatientDBHelper.TEM_TABLE, PatientDBHelper.TIMESTAMP, values);
-      Log.i(TAG, "Value has been inserted");
+      //Log.i(TAG, "Temperature has been inserted");
     } 
     catch (SQLException e)
     {
@@ -113,7 +113,40 @@ public class PatientDB
     } 
     finally
     {
-      Log.i(TAG, "Closing db...");
+     // Log.i(TAG, "Closing db...");
+      if (db != null)
+        db.close();
+    }
+  }
+
+    /**
+   * Adds a location to the location db.
+   * @param location {@code LocationWrapper} object to be added
+   */
+  public void addLocation(LocationWrapper location)
+  {
+    // Add interaction to the db
+    Log.i(TAG, "Adding record to locations table");
+    SQLiteDatabase db = null;
+    try
+    {
+      db = dbHelper.getWritableDatabase();
+      ContentValues values = new ContentValues();
+      values.put(LocationsDBHelper.TIMESTAMP, location.getTimestamp());
+      values.put(LocationsDBHelper.PROVIDER, location.getProvider());
+      values.put(LocationsDBHelper.LATITUDE, location.getLatitude());
+      values.put(LocationsDBHelper.LONGITUDE, location.getLongitude());
+      values.put(LocationsDBHelper.ACCURACY, location.getAccuracy());
+      db.insertOrThrow(LocationsDBHelper.TABLE, LocationsDBHelper.TIMESTAMP, values);      
+      Log.i(TAG, "Location has been inserted");
+    } 
+    catch (SQLException e)
+    {
+      Log.i(TAG, "Could not insert data into locations table: " + e);
+    } 
+    finally
+    {
+     // Log.i(TAG, "Closing db...");
       if (db != null)
         db.close();
     }
@@ -125,9 +158,9 @@ public class PatientDB
    */
   private static String getDBPath()
   {
-    Log.i(TAG, "getDBPath called.");
+    //Log.i(TAG, "getDBPath called.");
     String path = Environment.getExternalStorageDirectory().getPath() + "/" + BASE_DIR;
-    Log.i(TAG, "Checking if " + path + " exists");
+    //Log.i(TAG, "Checking if " + path + " exists");
     File dbDir = new File(path);
     if (!dbDir.isDirectory())
     {
