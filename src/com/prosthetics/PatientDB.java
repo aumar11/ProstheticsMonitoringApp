@@ -90,7 +90,7 @@ public class PatientDB
   }
 
   /**
-   * Adds a temperature to the patient db.
+   * Adds the temperature that was measured to the database.
    * @param temperature {@code TemperatureWrapper} object to be added
    */
   public void addTemperatureSample(TemperatureWrapper temperature)

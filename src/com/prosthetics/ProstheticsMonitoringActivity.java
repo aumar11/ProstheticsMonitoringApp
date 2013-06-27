@@ -97,9 +97,9 @@ public class ProstheticsMonitoringActivity extends Activity
   {
     super.onStart();
     if(D) Log.e(TAG, "++ ON START ++");
-
+    startLocationGathering();
     // If BT is not on, request that it be enabled.
-    // setupChat() will then be called during onActivityResult
+    // setupLink() will then be called during onActivityResult
     if (!mBluetoothAdapter.isEnabled())
     {
       Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -113,10 +113,16 @@ public class ProstheticsMonitoringActivity extends Activity
     }
   }
 
+  /**
+  * Initialises a {@code BluetoothLinkService} object
+  * and calls {@code connectDevice()} to connect to the
+  * partner embedded system.
+  * @see #BluetoothLinkService(Activity, Handler)
+  * @see #connectDevice()
+  */
   private void setupLink()
   {
     Log.d(TAG, "setupLink()");
-
     // Initialize the BluetoothLinkService to perform bluetooth connections
     mLinkService = new BluetoothLinkService(this, mHandler);
     connectDevice();
@@ -144,7 +150,24 @@ public class ProstheticsMonitoringActivity extends Activity
     super.onDestroy();
     // Stop the BluetoothLinkService
     if (mLinkService != null) mLinkService.stop();
+    stopLocationGathering();
     if(D) Log.e(TAG, "--- ON DESTROY ---");
+  }
+
+  /** Starts the gathering service. */
+  private void startLocationGathering()
+  {
+    Log.i(TAG, "startLocationGathering called.");
+    Intent intent = new Intent(this, LocationGathererService.class);
+    startService(intent);
+  }
+
+  /** Stops the gathering service. */
+  private void stopLocationGathering()
+  {
+    Log.i(TAG, "stopLocationGathering called.");
+    Intent intent = new Intent(this, LocationGathererService.class);
+    stopService(intent);
   }
 
   // The Handler that gets information back from the BluetoothLinkService
@@ -161,8 +184,6 @@ public class ProstheticsMonitoringActivity extends Activity
           {
             case BluetoothLinkService.STATE_CONNECTED:
               setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
-              // Send the current time
-              sendTimestamp();
               break;
             case BluetoothLinkService.STATE_CONNECTING:
               setStatus(R.string.title_connecting);
@@ -191,6 +212,7 @@ public class ProstheticsMonitoringActivity extends Activity
         case MESSAGE_TOAST:
           String t = msg.getData().getString(TOAST);
           Toast.makeText(getApplicationContext(), t, Toast.LENGTH_SHORT).show();
+          // if the connection was lost try to reconnect
           if(t.equals(CONN_LOST)|| t.equals(CONN_FAIL))
           {
             if (mLinkService != null)
@@ -230,6 +252,13 @@ public class ProstheticsMonitoringActivity extends Activity
     }
   }
 
+  /**
+  * Creates a {@code BluetoothDevice} object which relates to the
+  * embedded systems Bluetooth module. It then attempts to connect
+  * to the module.
+  * @see BluetoothDevice
+  * @see BluetoothLinkService#connect(BluetoothDevice)
+  */
   private void connectDevice()
   {
     // Get the BluetoothDevice object
@@ -250,21 +279,5 @@ public class ProstheticsMonitoringActivity extends Activity
     actionBar.setSubtitle(subTitle);
   }
 
-  // @Override
-  // public boolean onCreateOptionsMenu(Menu menu)
-  // {
-  //   MenuInflater inflater = getMenuInflater();
-  //   inflater.inflate(R.menu.option_menu, menu);
-  //   return true;
-  // }
 
-  // // Pretty hacky for now: only one item in the options menu
-  // @Override
-  // public boolean onOptionsItemSelected(MenuItem item)
-  // {
-  //   Intent serverIntent = null;
-  //   serverIntent = new Intent(this, DeviceListActivity.class);
-  //   startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
-  //   return true;
-  // }
 }

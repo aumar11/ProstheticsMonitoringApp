@@ -46,8 +46,8 @@ public class PatientDBHelper extends SQLiteOpenHelper
   }
 
   /**
-   * Creates new locations table inside the locations db if it doesn't exist
-   * already.
+   * Creates new accelerometer table and temperature table inside the 
+   * patient db if it doesn't exist already. 
    * @param db {@link android.database.sqlite.SQLiteDatabase} object.
    */
   @Override

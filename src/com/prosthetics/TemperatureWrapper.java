@@ -13,7 +13,6 @@ public class TemperatureWrapper
   /** Tag for Log statements in this class. */
   public final static String TAG = "TemperatureWrapper";
 
-  //private int oid;
   private String timestamp;
   private float temperature;
 
@@ -39,7 +38,7 @@ public class TemperatureWrapper
   }
 
   /**
-   * @return The value of the x axis reading.
+   * @return The value of tempererature that was recorded.
    */
   public float getValue()
   {

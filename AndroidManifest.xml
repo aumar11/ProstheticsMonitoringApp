@@ -1,31 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.prosthetics"
-      android:versionCode="1"
-      android:versionName="1.0">
-      <uses-sdk
+    package="com.prosthetics"
+    android:versionCode="1"
+    android:versionName="1.0">
+      
+    <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17"/>
-      <uses-permission android:name="android.permission.BLUETOOTH" />
-      <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-      <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
-        <activity android:name="ProstheticsMonitoringActivity"
-                  android:label="@string/app_name">
+
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+    <application
+        android:label="@string/app_name"
+        android:icon="@drawable/ic_launcher">
+        <activity 
+            android:name="com.prosthetics.ProstheticsMonitoringActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DeviceListActivity"
-              android:label="@string/select_device"
-              android:theme="@android:style/Theme.Holo.Dialog"
-              android:configChanges="orientation|keyboardHidden" />
-               <receiver android:name=".Autostart"  android:enabled="true"  android:exported="false"  android:label="Autostart">
+
+        <receiver
+            android:name="com.prosthetics.Autostart"
+            android:enabled="true"
+            android:exported="false"
+            android:label="Autostart">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <service android:name="com.prosthetics.BluetoothLinkService"></service>
+        <service android:name="com.prosthetics.LocationGathererService"></service>
+
     </application>
+
 </manifest>
