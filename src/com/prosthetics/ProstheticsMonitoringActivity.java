@@ -217,6 +217,8 @@ public class ProstheticsMonitoringActivity extends Activity
           {
             if (mLinkService != null)
             connectDevice();
+          else
+            setupLink();
           }
           break;
       }

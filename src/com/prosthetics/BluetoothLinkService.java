@@ -44,7 +44,7 @@ public class BluetoothLinkService
   private static final UUID MY_UUID_SECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
   /** Bluetooth MAC address of partner embedded system. */
-  public static final String BIG_MAC = "00:12:06:12:82:84";
+ // public static final String BIG_MAC = "00:12:06:12:82:84";
 
   // Member fields
   private final BluetoothAdapter mAdapter;
