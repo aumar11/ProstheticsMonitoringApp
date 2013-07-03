@@ -14,6 +14,7 @@ import android.view.View;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.content.Intent;
 import android.content.BroadcastReceiver;
@@ -71,7 +72,12 @@ public class ProstheticsMonitoringActivity extends Activity
   // Member object for the link services
   private BluetoothLinkService mLinkService = null;
 
+  // Number of attempts to connect Bluetooth device
   private int count = 0;
+
+  // Receiver for location updates
+  private BroadcastReceiver locationReceiver;
+
   /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState)
@@ -159,6 +165,30 @@ public class ProstheticsMonitoringActivity extends Activity
   /** Starts the gathering service. */
   private void startLocationGathering()
   {
+    // Set up receiver to listen for callbacks related to location data
+    IntentFilter filter = new IntentFilter();
+    filter.addAction(LocationReceiver.LOCATION_ACTION);
+
+    locationReceiver = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+        Bundle extras = intent.getExtras();
+        if(extras != null)
+        {
+          String timestamp = extras.getString(LocationReceiver.LOCATION_DATA);
+          TextView tv = (TextView) findViewById(R.id.txt_location_data);
+          tv.setText(timestamp);
+        }
+        else
+        {
+          TextView tv = (TextView) findViewById(R.id.txt_location_data);
+          tv.setText("No location data was received");
+        }
+      } 
+    };
+
+    registerReceiver(locationReceiver, filter);
+
     Log.i(TAG, "startLocationGathering called.");
     Intent intent = new Intent(this, LocationGathererService.class);
     startService(intent);
@@ -167,6 +197,8 @@ public class ProstheticsMonitoringActivity extends Activity
   /** Stops the gathering service. */
   private void stopLocationGathering()
   {
+    unregisterReceiver(locationReceiver);
+
     Log.i(TAG, "stopLocationGathering called.");
     Intent intent = new Intent(this, LocationGathererService.class);
     stopService(intent);

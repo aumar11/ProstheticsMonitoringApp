@@ -5,6 +5,9 @@ import java.util.Date;
 
 import android.content.Context;
 import android.util.Log;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -27,6 +30,12 @@ public class LocationReceiver implements LocationListener
 
   /** Tag for location provider type. */
   private static final String EXTRAS_KEY = "networkLocationType";
+
+  public static final String LOCATION_ACTION = "com.prosthetics.LocationAction";
+
+  public static final String LOCATION_DATA = "new_location_data";
+
+  Intent intent;
 
   private Context mContext;
 
@@ -65,6 +74,10 @@ public class LocationReceiver implements LocationListener
                                         location.getLongitude(),
                                         location.getAccuracy())
                                       );
+    intent = new Intent(LOCATION_ACTION);
+    intent.putExtra(LOCATION_DATA, timestamp);
+    mContext.sendBroadcast(intent);
+
   }
 
   public void onStatusChanged(String provider, int status, Bundle extras) {}
