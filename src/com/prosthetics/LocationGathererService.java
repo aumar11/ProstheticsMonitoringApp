@@ -26,6 +26,8 @@ public class LocationGathererService extends Service
 {
   /** Tag for Log statements in this class. */
   public static final String TAG = "LocationGathererService";
+  private static final boolean D = true;
+
   /** GPS location update period: 5 minutes */
   private final static long GPS_UPDATE_PERIOD = 300000;
   /** Network location update period: 5 minutes */
@@ -47,7 +49,7 @@ public class LocationGathererService extends Service
   @Override
   public void onCreate()
   {
-    Log.i(TAG, "onCreate called.");
+    if(D) Log.i(TAG, "onCreate called.");
     super.onCreate();
   }
 
@@ -66,7 +68,7 @@ public class LocationGathererService extends Service
   public void onDestroy()
   {
     super.onDestroy();
-    Log.i(TAG, "onDestroy called.");
+    if(D) Log.i(TAG, "onDestroy called.");
     stopGathering();
     //stopSync();
   }
@@ -76,7 +78,7 @@ public class LocationGathererService extends Service
   public int onStartCommand(Intent i, int flags, int startId)
   {
     super.onStartCommand(i, flags, startId);
-    Log.i(TAG, "onStartCommand called with startId " + startId + ": " + i);
+    if(D) Log.i(TAG, "onStartCommand called with startId " + startId + ": " + i);
     //mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
     startGathering();
     //startSync();
@@ -114,7 +116,7 @@ public class LocationGathererService extends Service
   /** Starts gathering location data. */
   private void startGathering()
   {
-    Log.i(TAG, "startGathering called.");
+    if(D) Log.i(TAG, "startGathering called.");
     mLocationReceiver = new LocationReceiver(getApplicationContext());
     mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     mLocationManager.requestLocationUpdates(
@@ -134,7 +136,7 @@ public class LocationGathererService extends Service
   /** Stop gathering location data */
   private void stopGathering() 
   {
-    Log.i(TAG, "stopGathering called.");
+    if(D) Log.i(TAG, "stopGathering called.");
     mLocationManager.removeUpdates(mLocationReceiver);
   }
 }

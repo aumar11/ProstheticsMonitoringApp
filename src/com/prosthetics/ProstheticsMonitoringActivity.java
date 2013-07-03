@@ -26,6 +26,7 @@ import android.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 /**
  * Main Activity and entry-point of the app.
@@ -122,7 +123,7 @@ public class ProstheticsMonitoringActivity extends Activity
   */
   private void setupLink()
   {
-    Log.d(TAG, "setupLink()");
+    if(D) Log.d(TAG, "setupLink()");
     // Initialize the BluetoothLinkService to perform bluetooth connections
     mLinkService = new BluetoothLinkService(this, mHandler);
     connectDevice();
@@ -203,6 +204,11 @@ public class ProstheticsMonitoringActivity extends Activity
           byte[] readBuf = (byte[]) msg.obj;
           // construct a string from the valid bytes in the buffer
           String readMessage = new String(readBuf, 0, msg.arg1);
+          TextView tv = (TextView) findViewById(R.id.txt_bluetooth_data);
+          if(readMessage.length() > 0)
+            tv.setText(readMessage);
+          else
+            tv.setText("No Bluetooth data was received");
           break;
         case MESSAGE_DEVICE_NAME:
           // save the connected device's name
@@ -217,6 +223,8 @@ public class ProstheticsMonitoringActivity extends Activity
           {
             if (mLinkService != null)
             connectDevice();
+          else
+            setupLink();
           }
           break;
       }

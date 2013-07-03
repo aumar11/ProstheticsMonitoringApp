@@ -12,6 +12,7 @@ public class TemperatureWrapper
 {
   /** Tag for Log statements in this class. */
   public final static String TAG = "TemperatureWrapper";
+  private static final boolean D = true;
 
   private String timestamp;
   private float temperature1;
@@ -25,7 +26,7 @@ public class TemperatureWrapper
    */
   public TemperatureWrapper( String timestamp, float temperature1, float temperature2)
   {
-    Log.i(TAG, "Create a LocationWrapper.");
+    if (D) Log.i(TAG, "Create a LocationWrapper.");
     this.timestamp = timestamp;
     this.temperature1 = temperature1;
     this.temperature2 = temperature2;

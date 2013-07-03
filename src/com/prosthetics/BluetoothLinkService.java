@@ -45,7 +45,7 @@ public class BluetoothLinkService
   private static final UUID MY_UUID_SECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
   /** Bluetooth MAC address of partner embedded system. */
-  public static final String BIG_MAC = "00:12:06:12:82:84";
+ // public static final String BIG_MAC = "00:12:06:12:82:84";
 
   // Member fields
   private final BluetoothAdapter mAdapter;
@@ -276,7 +276,7 @@ public class BluetoothLinkService
 
     public void run()
     {
-      Log.i(TAG, "BEGIN mConnectThread SocketType:" + mSocketType);
+      if (D) Log.i(TAG, "BEGIN mConnectThread SocketType:" + mSocketType);
       setName("ConnectThread" + mSocketType);
 
       // Always cancel discovery because it will slow down a connection
@@ -339,7 +339,7 @@ public class BluetoothLinkService
 
     public ConnectedThread(BluetoothSocket socket, String socketType)
     {
-      Log.d(TAG, "create ConnectedThread: " + socketType);
+      if (D) Log.d(TAG, "create ConnectedThread: " + socketType);
       mmSocket = socket;
       InputStream tmpIn = null;
       OutputStream tmpOut = null;

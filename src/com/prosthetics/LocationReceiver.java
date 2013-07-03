@@ -23,6 +23,8 @@ public class LocationReceiver implements LocationListener
 {
   /** Tag for Log statements in this class. */
   public static final String TAG = "LocationReceiver";
+  private static final boolean D = true;
+
   /** Tag for location provider type. */
   private static final String EXTRAS_KEY = "networkLocationType";
 
@@ -47,8 +49,15 @@ public class LocationReceiver implements LocationListener
     Bundle extras = location.getExtras();
     String provider = (extras == null || extras.getString(EXTRAS_KEY) == null)
                     ? location.getProvider() : extras.getString(EXTRAS_KEY);
-    Log.i(TAG, "Location provider at " + timestamp + " : " + provider + " Location: " + location.getLatitude() + ", " + location.getLongitude());
-    PatientDB db = new PatientDB(mContext);
+            
+    if(D) Log.i(TAG, "Location provider at " 
+                      + timestamp + " : " 
+                      + provider + " Location: " 
+                      + location.getLatitude() + ", " 
+                      + location.getLongitude());
+
+    LocationsDB db = new LocationsDB(mContext);
+
     db.addLocation(new LocationWrapper(
                                         timestamp, 
                                         provider, 
