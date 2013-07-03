@@ -17,6 +17,8 @@ public class LocationsDBHelper extends SQLiteOpenHelper
 {
   /** Tag for Log statements in this class. */
   public final static String TAG = "LocationsDBHelper";
+  private static final boolean D = true;
+
   /** Name of the only table in the db for storing locations of all types. */
   public final static String TABLE = "locations";
   /** Id column name. */
@@ -41,7 +43,7 @@ public class LocationsDBHelper extends SQLiteOpenHelper
   public LocationsDBHelper(Context context, String path)
   {
     super(context, path, null, 1);
-    Log.i(TAG, "Create a LocationsDBHelper.");
+    if(D) Log.i(TAG, "Create a LocationsDBHelper.");
   }
 
   /**
@@ -52,7 +54,7 @@ public class LocationsDBHelper extends SQLiteOpenHelper
   @Override
   public void onCreate(SQLiteDatabase db)
   {
-    Log.i(TAG, "onCreate called.");
+    if(D) Log.i(TAG, "onCreate called.");
     String interSQL = "create table " 
                     + TABLE 
                     + " (" 

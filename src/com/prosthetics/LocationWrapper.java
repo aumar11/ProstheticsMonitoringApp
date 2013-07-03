@@ -12,6 +12,7 @@ public class LocationWrapper
 {
   /** Tag for Log statements in this class. */
   public final static String TAG = "LocationWrapper";
+  private static final boolean D = true;
 
   private int oid;
   private String timestamp;
@@ -33,7 +34,7 @@ public class LocationWrapper
    */
   public LocationWrapper( String timestamp, String provider, double latitude, double longitude, double accuracy)
   {
-    Log.i(TAG, "Create a LocationWrapper.");
+    if(D) Log.i(TAG, "Create a LocationWrapper.");
     this.timestamp = timestamp;
     this.date = timestamp.split(" ")[0];
     this.time = timestamp.split(" ")[1];

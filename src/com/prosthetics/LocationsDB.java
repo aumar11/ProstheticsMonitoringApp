@@ -33,6 +33,8 @@ public class LocationsDB
 {
   /** Tag for Log statements in this class. */
   public final static String TAG = "LocationsDB";
+  private static final boolean D = true;
+
   /**
    * Base directory holding the public contents of the app on the 
    * external memory card. The absolute path looks like:
@@ -63,7 +65,7 @@ public class LocationsDB
   public void addLocation(LocationWrapper location)
   {
     // Add interaction to the db
-    Log.i(TAG, "Adding record to locations table");
+    if(D) Log.i(TAG, "Adding record to locations table");
     SQLiteDatabase db = null;
     try
     {
@@ -94,9 +96,9 @@ public class LocationsDB
    */
   private static String getDBPath()
   {
-    Log.i(TAG, "getDBPath called.");
+    if(D) Log.i(TAG, "getDBPath called.");
     String path = Environment.getExternalStorageDirectory().getPath() + "/" + BASE_DIR;
-    Log.i(TAG, "Checking if " + path + " exists");
+    if(D) Log.i(TAG, "Checking if " + path + " exists");
     File dbDir = new File(path);
     if (!dbDir.isDirectory())
     {
