@@ -17,6 +17,7 @@ public class PatientDBHelper extends SQLiteOpenHelper
 {
   /** Tag for Log statements in this class. */
   public final static String TAG = "PatientDBHelper";
+  private static final boolean D = true;
   /** Name of the table in the db for storing accelerometer data. */
   public final static String ACC_TABLE = "accelerometer";
   /** Id column name. */
@@ -42,7 +43,7 @@ public class PatientDBHelper extends SQLiteOpenHelper
   public PatientDBHelper(Context context, String path)
   {
     super(context, path, null, 1);
-    Log.i(TAG, "Create a PatientDBHelper.");
+    if (D) Log.i(TAG, "Create a PatientDBHelper.");
   }
 
   /**
@@ -53,7 +54,7 @@ public class PatientDBHelper extends SQLiteOpenHelper
   @Override
   public void onCreate(SQLiteDatabase db)
   {
-    Log.i(TAG, "onCreate called.");
+    if (D) Log.i(TAG, "onCreate called.");
     String createAccSQL = "create table " 
                         + ACC_TABLE 
                         + " (" 

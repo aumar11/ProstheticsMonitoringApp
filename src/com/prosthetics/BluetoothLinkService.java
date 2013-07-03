@@ -275,7 +275,7 @@ public class BluetoothLinkService
 
     public void run()
     {
-      Log.i(TAG, "BEGIN mConnectThread SocketType:" + mSocketType);
+      if (D) Log.i(TAG, "BEGIN mConnectThread SocketType:" + mSocketType);
       setName("ConnectThread" + mSocketType);
 
       // Always cancel discovery because it will slow down a connection
@@ -338,7 +338,7 @@ public class BluetoothLinkService
 
     public ConnectedThread(BluetoothSocket socket, String socketType)
     {
-      Log.d(TAG, "create ConnectedThread: " + socketType);
+      if (D) Log.d(TAG, "create ConnectedThread: " + socketType);
       mmSocket = socket;
       InputStream tmpIn = null;
       OutputStream tmpOut = null;
