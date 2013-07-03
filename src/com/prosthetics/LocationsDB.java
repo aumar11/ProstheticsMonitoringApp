@@ -40,7 +40,7 @@ public class LocationsDB
    * external memory card. The absolute path looks like:
    * /path_to_external_memory/BASE_DIR/
    */
-  private final static String BASE_DIR = "LocationGatherer";
+  private final static String BASE_DIR = "ProstheticsMonitoringAppProject";
   /** The name of the interactions db file. */
   private final static String DB_NAME = "locations.sqlite3";
 
