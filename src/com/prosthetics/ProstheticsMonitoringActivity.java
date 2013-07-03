@@ -100,17 +100,17 @@ public class ProstheticsMonitoringActivity extends Activity
     startLocationGathering();
     // If BT is not on, request that it be enabled.
     // setupLink() will then be called during onActivityResult
-    if (!mBluetoothAdapter.isEnabled())
-    {
-      Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-      startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-    // Otherwise, setup the link session
-    }
-    else
-    {
-      if (mLinkService == null)
-        setupLink();
-    }
+    // if (!mBluetoothAdapter.isEnabled())
+    // {
+    //   Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+    //   startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+    // // Otherwise, setup the link session
+    // }
+    // else
+    // {
+    //   if (mLinkService == null)
+    //     setupLink();
+    // }
   }
 
   /**
@@ -122,7 +122,7 @@ public class ProstheticsMonitoringActivity extends Activity
   */
   private void setupLink()
   {
-    Log.d(TAG, "setupLink()");
+    if(D) Log.d(TAG, "setupLink()");
     // Initialize the BluetoothLinkService to perform bluetooth connections
     mLinkService = new BluetoothLinkService(this, mHandler);
     connectDevice();
@@ -149,7 +149,7 @@ public class ProstheticsMonitoringActivity extends Activity
   {
     super.onDestroy();
     // Stop the BluetoothLinkService
-    if (mLinkService != null) mLinkService.stop();
+    //if (mLinkService != null) mLinkService.stop();
     stopLocationGathering();
     if(D) Log.e(TAG, "--- ON DESTROY ---");
   }
