@@ -71,6 +71,7 @@ public class ProstheticsMonitoringActivity extends Activity
   // Member object for the link services
   private BluetoothLinkService mLinkService = null;
 
+  private int count = 0;
   /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState)
@@ -188,6 +189,9 @@ public class ProstheticsMonitoringActivity extends Activity
               break;
             case BluetoothLinkService.STATE_CONNECTING:
               setStatus(R.string.title_connecting);
+              TextView tv = (TextView) findViewById(R.id.txt_bluetooth_data);
+              tv.setText("Connecting attempt: " + count);
+              count++;
               break;
             case BluetoothLinkService.STATE_LISTEN:
             case BluetoothLinkService.STATE_NONE:
