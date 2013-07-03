@@ -26,6 +26,7 @@ import android.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 /**
  * Main Activity and entry-point of the app.
@@ -100,17 +101,17 @@ public class ProstheticsMonitoringActivity extends Activity
     startLocationGathering();
     // If BT is not on, request that it be enabled.
     // setupLink() will then be called during onActivityResult
-    // if (!mBluetoothAdapter.isEnabled())
-    // {
-    //   Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-    //   startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-    // // Otherwise, setup the link session
-    // }
-    // else
-    // {
-    //   if (mLinkService == null)
-    //     setupLink();
-    // }
+    if (!mBluetoothAdapter.isEnabled())
+    {
+      Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+      startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+    // Otherwise, setup the link session
+    }
+    else
+    {
+      if (mLinkService == null)
+        setupLink();
+    }
   }
 
   /**
@@ -149,7 +150,7 @@ public class ProstheticsMonitoringActivity extends Activity
   {
     super.onDestroy();
     // Stop the BluetoothLinkService
-    //if (mLinkService != null) mLinkService.stop();
+    if (mLinkService != null) mLinkService.stop();
     stopLocationGathering();
     if(D) Log.e(TAG, "--- ON DESTROY ---");
   }
@@ -203,6 +204,11 @@ public class ProstheticsMonitoringActivity extends Activity
           byte[] readBuf = (byte[]) msg.obj;
           // construct a string from the valid bytes in the buffer
           String readMessage = new String(readBuf, 0, msg.arg1);
+          TextView tv = (TextView) findViewById(R.id.txt_bluetooth_data);
+          if(readMessage.length() > 0)
+            tv.setText(readMessage);
+          else
+            tv.setText("No Bluetooth data was received");
           break;
         case MESSAGE_DEVICE_NAME:
           // save the connected device's name
