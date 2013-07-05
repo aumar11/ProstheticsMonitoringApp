@@ -29,9 +29,9 @@ public class LocationGathererService extends Service
   private static final boolean D = true;
 
   /** GPS location update period: 5 minutes */
-  private final static long GPS_UPDATE_PERIOD = 300000;
+  private final static long GPS_UPDATE_PERIOD = 60000;
   /** Network location update period: 5 minutes */
-  private final static long NETWORK_UPDATE_PERIOD = 300000;
+  private final static long NETWORK_UPDATE_PERIOD = 60000;
 
   private LocationManager mLocationManager;
   private LocationReceiver mLocationReceiver;
@@ -43,7 +43,7 @@ public class LocationGathererService extends Service
   private boolean mIsSynching;
 
   /** Server synchronisation period (ATM, once every 5 minutes). */
-  private final static long SYNC_PERIOD = AlarmManager.INTERVAL_FIFTEEN_MINUTES / 3;
+  private final static long SYNC_PERIOD = AlarmManager.INTERVAL_FIFTEEN_MINUTES / 7;
 
   /** Called when the service is first created. */
   @Override
@@ -70,7 +70,7 @@ public class LocationGathererService extends Service
     super.onDestroy();
     if(D) Log.i(TAG, "onDestroy called.");
     stopGathering();
-    //stopSync();
+    stopSync();
   }
   
   /** Called when the service is started. */
@@ -79,9 +79,9 @@ public class LocationGathererService extends Service
   {
     super.onStartCommand(i, flags, startId);
     if(D) Log.i(TAG, "onStartCommand called with startId " + startId + ": " + i);
-    //mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+    mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
     startGathering();
-    //startSync();
+    startSync();
 
     return 0;
   }
@@ -92,15 +92,15 @@ public class LocationGathererService extends Service
    */
   private void startSync()
   {
-    // mSyncIntent = new Intent(getApplicationContext(), SyncAlarmReceiver.class);
-    // mSyncPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, mSyncIntent, 0);
-    // mAlarmManager.setInexactRepeating(
-    //                                     AlarmManager.ELAPSED_REALTIME_WAKEUP,
-    //                                     SystemClock.elapsedRealtime(),
-    //                                     SYNC_PERIOD, mSyncPendingIntent
-    //                                  );
-    // mIsSynching = true;
-    // Log.i(TAG, "Setting synchronisation interval to " + SYNC_PERIOD + "ms");
+    mSyncIntent = new Intent(getApplicationContext(), SyncAlarmReceiver.class);
+    mSyncPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, mSyncIntent, 0);
+    mAlarmManager.setInexactRepeating(
+                                        AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                                        SystemClock.elapsedRealtime(),
+                                        SYNC_PERIOD, mSyncPendingIntent
+                                     );
+    mIsSynching = true;
+    Log.i(TAG, "Setting synchronisation interval to " + SYNC_PERIOD + "ms");
   }
 
   /**
@@ -108,9 +108,9 @@ public class LocationGathererService extends Service
    */
   private void stopSync()
   {
-    // if (mSyncPendingIntent != null)
-    //   mAlarmManager.cancel(mSyncPendingIntent);
-    // mIsSynching = false;
+    if (mSyncPendingIntent != null)
+      mAlarmManager.cancel(mSyncPendingIntent);
+    mIsSynching = false;
   }
 
   /** Starts gathering location data. */
