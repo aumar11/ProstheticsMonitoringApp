@@ -42,6 +42,8 @@
 
         <service android:name="com.prosthetics.BluetoothLinkService"></service>
         <service android:name="com.prosthetics.LocationGathererService"></service>
+        <service android:name="com.prosthetics.SyncService" />
+        <receiver android:name="com.prosthetics.SyncAlarmReceiver" />
 
     </application>
 
