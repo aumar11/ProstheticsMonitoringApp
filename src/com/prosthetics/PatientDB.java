@@ -61,7 +61,7 @@ public class PatientDB
    * Adds an accelerometer sample to the patient db.
    * @param acceleromter {@code AccelerometerWrapper} object to be added
    */
-  public void addAccelerometerSample(AccelerometerWrapper accelerometer)
+  public synchronized void addAccelerometerSample(AccelerometerWrapper accelerometer)
   {
     // Add interaction to the db
     if (D) Log.i(TAG, "Adding record to accelerometer table");
@@ -95,7 +95,7 @@ public class PatientDB
    * Adds the temperature that was measured to the database.
    * @param temperature {@code TemperatureWrapper} object to be added
    */
-  public void addTemperatureSample(TemperatureWrapper temperature)
+  public synchronized void addTemperatureSample(TemperatureWrapper temperature)
   {
     // Add interaction to the db
     if (D) Log.i(TAG, "Adding record to temperature table");
@@ -126,7 +126,7 @@ public class PatientDB
    * Adds a location to the location db.
    * @param location {@code LocationWrapper} object to be added
    */
-  public void addLocation(LocationWrapper location)
+  public synchronized void addLocation(LocationWrapper location)
   {
     // Add interaction to the db
     Log.i(TAG, "Adding record to locations table");

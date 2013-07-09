@@ -62,7 +62,7 @@ public class LocationsDB
    * Adds a location to the location db.
    * @param location {@code LocationWrapper} object to be added
    */
-  public void addLocation(LocationWrapper location)
+  public synchronized void addLocation(LocationWrapper location)
   {
     // Add interaction to the db
     if(D) Log.i(TAG, "Adding record to locations table");

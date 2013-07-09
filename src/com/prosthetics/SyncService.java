@@ -218,6 +218,7 @@ public class SyncService extends Service
 						if (httpEntity != null)
 						{
 							latestID = EntityUtils.toString(httpEntity, SyncService.CHARSET);
+							latestID = latestID.replace("\n", "").replace("\r", "");
 							Log.i(SyncService.TAG, "Latest ID in locations: " + latestID);
 						}
 						else
