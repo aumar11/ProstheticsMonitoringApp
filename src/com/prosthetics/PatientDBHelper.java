@@ -22,6 +22,8 @@ public class PatientDBHelper extends SQLiteOpenHelper
   public final static String ACC_TABLE = "accelerometer";
   /** Id column name. */
   public final static String ID = "id";
+  /** UId column name. */
+  public final static String UID = "user_id";
   /** Timestamp column name */
   public final static String TIMESTAMP = "timestamp";
   /** X axis column name */
@@ -73,7 +75,8 @@ public class PatientDBHelper extends SQLiteOpenHelper
     String createAccSQL = "create table " 
                         + ACC_TABLE 
                         + " (" 
-                        + ID + " integer primary key autoincrement, " 
+                        + ID + " integer primary key autoincrement, "
+                        + UID + " integer, " 
                         + TIMESTAMP + " text, "
                         + X_AXIS + " integer, "
                         + Y_AXIS + " integer, "
@@ -84,21 +87,12 @@ public class PatientDBHelper extends SQLiteOpenHelper
                        + TEM_TABLE 
                        + " (" 
                        + ID + " integer primary key autoincrement, " 
+                       + UID + " integer, "          
                        + TIMESTAMP + " text, "
                        + VALUE1 + " integer, "
                        + VALUE2 + " integer);";
     db.execSQL(createTemSQL);
 
-    String interSQL = "create table " 
-                    + TABLE 
-                    + " (" 
-                    + ID + " integer primary key autoincrement, " 
-                    + TIMESTAMP + " datetime, "
-                    + PROVIDER + " text, "
-                    + LATITUDE + " real, "
-                    + LONGITUDE + " real, "
-                    + ACCURACY + " real);";
-    db.execSQL(interSQL);
     
   }
 

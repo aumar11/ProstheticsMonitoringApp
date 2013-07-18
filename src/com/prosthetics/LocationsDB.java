@@ -46,6 +46,8 @@ public class LocationsDB
 
   private LocationsDBHelper dbHelper;
 
+  private int uid = 1; // Fix;Me: Hacky way of adding new users
+
   /**
    * Constructs an object of type {@code LocationsDB}.
    * @param context The {@code Context} in which the {@code LocationsDB} object
@@ -71,6 +73,7 @@ public class LocationsDB
     {
       db = dbHelper.getWritableDatabase();
       ContentValues values = new ContentValues();
+      values.put(LocationsDBHelper.UID, uid);
       values.put(LocationsDBHelper.TIMESTAMP, location.getTimestamp());
       values.put(LocationsDBHelper.PROVIDER, location.getProvider());
       values.put(LocationsDBHelper.LATITUDE, location.getLatitude());
@@ -118,6 +121,12 @@ public class LocationsDB
     return path;
   }
 
+   /**
+   * Returns a JSON array constructed by the entries
+   * in the location db with an ID greated then {@code latestId}.
+   * @param latestId
+   * @return Absolute path to the location db.
+   */
   public JSONArray getLatestLocations(int latestId)
   {
     Log.i(TAG, "Getting all locations");
@@ -139,15 +148,17 @@ public class LocationsDB
       while (c.moveToNext())
       {
         int id = c.getInt(0);
-        String t = c.getString(1);
-        String prov = c.getString(2);
-        float lat = c.getFloat(3);
-        float lon = c.getFloat(4);
-        float acc = c.getFloat(5);
+        int u = c.getInt(1);
+        String t = c.getString(2);
+        String prov = c.getString(3);
+        float lat = c.getFloat(4);
+        float lon = c.getFloat(5);
+        float acc = c.getFloat(6);
         JSONObject data = new JSONObject();
         try
         {
           data.put(LocationsDBHelper.ID, id);
+          data.put(LocationsDBHelper.UID, u);
           data.put(LocationsDBHelper.TIMESTAMP, t);
           data.put(LocationsDBHelper.PROVIDER, prov);
           data.put(LocationsDBHelper.LATITUDE, lat);

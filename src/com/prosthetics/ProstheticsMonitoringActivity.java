@@ -51,7 +51,7 @@ public class ProstheticsMonitoringActivity extends Activity
   // Key names received from the BluetoothChatService Handler
   public static final String DEVICE_NAME = "device_name";
   public static final String TOAST = "toast";
-  public static final String BIG_MAC = "00:12:06:12:82:84";
+  public static final String MAC_ADDRESS = "00:12:06:12:82:84";
 
   public static final String CONN_LOST = "Connection lost";
   public static final String CONN_FAIL = "Unable to connect device";
@@ -98,6 +98,24 @@ public class ProstheticsMonitoringActivity extends Activity
       finish();
       return;
     }
+    else
+    {
+      startLocationGathering();
+      // If BT is not on, request that it be enabled.
+      // setupLink() will then be called during onActivityResult
+      if (!mBluetoothAdapter.isEnabled())
+      {
+        Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+      // Otherwise, setup the link session
+      }
+      else
+      {
+        if (mLinkService == null)
+          setupLink();
+          connectDevice();
+      }
+   }
   }
 
   @Override
@@ -105,20 +123,6 @@ public class ProstheticsMonitoringActivity extends Activity
   {
     super.onStart();
     if(D) Log.e(TAG, "++ ON START ++");
-    startLocationGathering();
-    // If BT is not on, request that it be enabled.
-    // setupLink() will then be called during onActivityResult
-    if (!mBluetoothAdapter.isEnabled())
-    {
-      Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-      startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-    // Otherwise, setup the link session
-    }
-    else
-    {
-      if (mLinkService == null)
-        setupLink();
-    }
   }
 
   /**
@@ -133,7 +137,6 @@ public class ProstheticsMonitoringActivity extends Activity
     if(D) Log.d(TAG, "setupLink()");
     // Initialize the BluetoothLinkService to perform bluetooth connections
     mLinkService = new BluetoothLinkService(this, mHandler);
-    connectDevice();
     // Initialize the buffer for outgoing messages
     mOutStringBuffer = new StringBuffer("");
   }
@@ -179,11 +182,11 @@ public class ProstheticsMonitoringActivity extends Activity
           TextView tv = (TextView) findViewById(R.id.txt_location_data);
           tv.setText(timestamp);
         }
-        else
-        {
-          TextView tv = (TextView) findViewById(R.id.txt_location_data);
-          tv.setText("No location data was received");
-        }
+        // else
+        // {
+        //   TextView tv = (TextView) findViewById(R.id.txt_location_data);
+        //   tv.setText("No location data was received");
+        // }
       } 
     };
 
@@ -221,9 +224,6 @@ public class ProstheticsMonitoringActivity extends Activity
               break;
             case BluetoothLinkService.STATE_CONNECTING:
               setStatus(R.string.title_connecting);
-              TextView tv = (TextView) findViewById(R.id.txt_bluetooth_data);
-              tv.setText("Connecting attempt: " + count);
-              count++;
               break;
             case BluetoothLinkService.STATE_LISTEN:
             case BluetoothLinkService.STATE_NONE:
@@ -237,14 +237,10 @@ public class ProstheticsMonitoringActivity extends Activity
           String writeMessage = new String(writeBuf);
           break;
         case MESSAGE_READ:
-          byte[] readBuf = (byte[]) msg.obj;
-          // construct a string from the valid bytes in the buffer
-          String readMessage = new String(readBuf, 0, msg.arg1);
+          String readMessage = (String) msg.obj;
+          Log.i(TAG, readMessage);
           TextView tv = (TextView) findViewById(R.id.txt_bluetooth_data);
-          if(readMessage.length() > 0)
-            tv.setText(readMessage);
-          else
-            tv.setText("No Bluetooth data was received");
+          tv.setText(readMessage);
           break;
         case MESSAGE_DEVICE_NAME:
           // save the connected device's name
@@ -257,10 +253,16 @@ public class ProstheticsMonitoringActivity extends Activity
           // if the connection was lost try to reconnect
           if(t.equals(CONN_LOST)|| t.equals(CONN_FAIL))
           {
+            Log.i(TAG, t);
             if (mLinkService != null)
-            connectDevice();
-          else
-            setupLink();
+            {
+              connectDevice();
+            }
+            else
+            {
+              setupLink();
+              connectDevice();
+            }
           }
           break;
       }
@@ -306,7 +308,7 @@ public class ProstheticsMonitoringActivity extends Activity
   private void connectDevice()
   {
     // Get the BluetoothDevice object
-    BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(BIG_MAC);
+    BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(MAC_ADDRESS);
     // Attempt to connect to the device
     mLinkService.connect(device);
   }

@@ -23,6 +23,8 @@ public class LocationsDBHelper extends SQLiteOpenHelper
   public final static String TABLE = "locations";
   /** Id column name. */
   public final static String ID = "id";
+  /** UId column name. */
+  public final static String UID = "user_id";
   /** Timestamp column name. */
   public final static String TIMESTAMP = "timestamp";
   /** Provider column name */
@@ -58,7 +60,8 @@ public class LocationsDBHelper extends SQLiteOpenHelper
     String interSQL = "create table " 
                     + TABLE 
                     + " (" 
-                    + ID + " integer primary key autoincrement, " 
+                    + ID + " integer primary key autoincrement, "
+                    + UID + " integer, "
                     + TIMESTAMP + " datetime, "
                     + PROVIDER + " text, "
                     + LATITUDE + " real, "

@@ -31,6 +31,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.util.Base64;
 import android.util.Log;
 
 
@@ -54,18 +55,18 @@ public class SyncService extends Service
 	 */
 	private final static String CHARSET = "UTF-8";
 
-  /** 
-   * Path to test database
-   */
-  private final static String PATH = "http://sederunt.org/locations/input";
+    /** 
+     * Full path to the MySQL database on the server storing location data.
+     */
+    private final static String PATH = "http://sederunt.org/locations/input";
 
 	/**
 	 * Server host name.
 	 */
-	//private String HOST = "http://ancient-cove-5464.herokuapp.com";
+	private String HOST = "sederunt.org";
 
 	/**
-	 * Relative path to the PHP script returning the latest data id on the server.
+	 * Full path to the Sinatra script returning the latest data id on the server.
 	 */
 	private final static String LATEST_PATH = "http://sederunt.org/locations/latest";
 
@@ -139,14 +140,20 @@ public class SyncService extends Service
 	{
 		Log.i(TAG, "Synchronising new location data with server");
 		HttpParams myParams = new BasicHttpParams();
-    HttpConnectionParams.setConnectionTimeout(myParams, 10000);
-    HttpConnectionParams.setSoTimeout(myParams, 10000);
-    HttpClient httpclient = new DefaultHttpClient(myParams);
+	    HttpConnectionParams.setConnectionTimeout(myParams, 10000);
+	    HttpConnectionParams.setSoTimeout(myParams, 10000);
+	    HttpClient httpclient = new DefaultHttpClient(myParams);
+
+
+
 
     try
     {
       HttpPost httppost = new HttpPost(url);
       httppost.setHeader("Content-type", "application/json");
+      httppost.setHeader("Authorization",
+      					 "Basic " + Base64.encodeToString("admin:admin".getBytes(),
+      					  Base64.NO_WRAP));
 
       StringEntity se = new StringEntity(json); 
       se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
@@ -239,14 +246,8 @@ public class SyncService extends Service
 				{
 					Log.i(SyncService.TAG, "NO ERROR LOL");
 					LocationsDB db = new LocationsDB(SyncService.this); // Error :(
-					int l = Integer.parseInt(latestID);
-					Log.i(SyncService.TAG, "latest id = " + l);
-					JSONArray temp = db.getLatestLocations(l);
-					Log.i(SyncService.TAG, "JSON ARRAY = " + temp);
-					String locations = temp.toString();
-					Log.i(SyncService.TAG, "location string = " + locations);
-					// String locations = db.getLatestLocations(Integer.parseInt(latestID)).toString();
-          // Log.i(SyncService.TAG, "JSONObject looks like: " + locations);
+					String locations = db.getLatestLocations(Integer.parseInt(latestID)).toString();
+                    Log.i(SyncService.TAG, "JSONObject looks like: " + locations);
 					updateServer(PATH, locations);
 				}
 				if (mHasError)

@@ -45,6 +45,8 @@ public class PatientDB
   private final static String DB_NAME = "patient.sqlite3";
   private PatientDBHelper dbHelper;
 
+  private int uid = 1; // Fix;Me: Hacky way of adding new users
+
   /**
    * Constructs an object of type {@code PatientDB}.
    * @param context The {@code Context} in which the {@code PatientDB} object
@@ -71,6 +73,7 @@ public class PatientDB
     {
       db = dbHelper.getWritableDatabase();
       ContentValues values = new ContentValues();
+      values.put(PatientDBHelper.UID, uid);
       values.put(PatientDBHelper.TIMESTAMP, accelerometer.getTimestamp());
       values.put(PatientDBHelper.X_AXIS, accelerometer.getX());
       values.put(PatientDBHelper.Y_AXIS, accelerometer.getY());
@@ -105,6 +108,7 @@ public class PatientDB
     {
       db = dbHelper.getWritableDatabase();
       ContentValues values = new ContentValues();
+      values.put(PatientDBHelper.UID, uid);
       values.put(PatientDBHelper.TIMESTAMP, temperature.getTimestamp());
       values.put(PatientDBHelper.VALUE1, temperature.getValue1());
       values.put(PatientDBHelper.VALUE2, temperature.getValue2());
@@ -117,39 +121,6 @@ public class PatientDB
     } 
     finally
     {
-      if (db != null)
-        db.close();
-    }
-  }
-
-    /**
-   * Adds a location to the location db.
-   * @param location {@code LocationWrapper} object to be added
-   */
-  public synchronized void addLocation(LocationWrapper location)
-  {
-    // Add interaction to the db
-    Log.i(TAG, "Adding record to locations table");
-    SQLiteDatabase db = null;
-    try
-    {
-      db = dbHelper.getWritableDatabase();
-      ContentValues values = new ContentValues();
-      values.put(LocationsDBHelper.TIMESTAMP, location.getTimestamp());
-      values.put(LocationsDBHelper.PROVIDER, location.getProvider());
-      values.put(LocationsDBHelper.LATITUDE, location.getLatitude());
-      values.put(LocationsDBHelper.LONGITUDE, location.getLongitude());
-      values.put(LocationsDBHelper.ACCURACY, location.getAccuracy());
-      db.insertOrThrow(LocationsDBHelper.TABLE, LocationsDBHelper.TIMESTAMP, values);      
-      Log.i(TAG, "Location has been inserted");
-    } 
-    catch (SQLException e)
-    {
-      Log.i(TAG, "Could not insert data into locations table: " + e);
-    } 
-    finally
-    {
-      if (D) Log.i(TAG, "Closing db...");
       if (db != null)
         db.close();
     }

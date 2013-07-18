@@ -30,7 +30,6 @@ import android.util.Log;
  * BluetoothChat example.
  * @version 1.0
  */
-
 public class BluetoothLinkService
 {
   /** Tag for Log statements in this class. */
@@ -377,25 +376,28 @@ public class BluetoothLinkService
           while ((line = r.readLine()) != null)
           {
             List<String> data = Arrays.asList(line.split(","));
-            if (data.size() == 6)
+            if (data.size() == 7)
             {
               if (D) Log.i(TAG, "Received " + line);
               String timestamp = data.get(0);
-              int xaxis = Integer.parseInt(data.get(1));
-              int yaxis = Integer.parseInt(data.get(2));
-              int zaxis = Integer.parseInt(data.get(3));
-              int temperature1 = Integer.parseInt(data.get(4)); 
-              int temperature2 = Integer.parseInt(data.get(5)); 
+
+              int xaxis = Integer.parseInt(data.get(2));
+              int yaxis = Integer.parseInt(data.get(3));
+              int zaxis = Integer.parseInt(data.get(4));
+              int temperature1 = Integer.parseInt(data.get(5)); 
+              int temperature2 = Integer.parseInt(data.get(6)); 
                
               AccelerometerWrapper acc = new AccelerometerWrapper(timestamp, xaxis, yaxis, zaxis);
               TemperatureWrapper tem = new TemperatureWrapper(timestamp, temperature1, temperature2);
               PatientDB patDB = new PatientDB(mContext);
               patDB.addAccelerometerSample(acc);
               patDB.addTemperatureSample(tem);
+
+              mHandler.obtainMessage(ProstheticsMonitoringActivity.MESSAGE_READ, bytes, -1, line).sendToTarget();
             }
           }
           // Send the obtained bytes to the UI Activity
-          mHandler.obtainMessage(ProstheticsMonitoringActivity.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+         
         }
         catch (IOException e)
         {
